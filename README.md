@@ -69,7 +69,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement notify function in Notification service to notify each Subscriber.`
     -   [x] Commit: `Implement publish function in Program service and Program controller.`
     -   [x] Commit: `Edit Product service methods to call notify after create/delete.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -120,3 +120,28 @@ This is the place for you to write reflections:
    - Team Collaboration: Membagikan koleksi memudahkan kolaborasi dengan anggota tim yang perlu memahami dan menguji API.
 
 #### Reflection Publisher-3
+1. Dalam kasus tutorial ini, kita menggunakan variasi model Push dari Pola Observer. Publisher BambangShop secara aktif mengirimkan notifikasi dengan data yang relevan kepada subscriber setiap kali ada perubahan status (penciptaan produk, penghapusan, atau promosi). Penerbit menentukan kapan mengirim data dan data apa yang harus dimasukkan dalam payload notifikasi, sementara subscriber adalah penerima pasif yang hanya memproses data yang diterima.
+
+2. Keuntungan dan kerugian menggunakan model Pull:
+
+    Keuntungan model Pull:
+   - Subscriber dapat mengambil hanya informasi yang mereka butuhkan, yang dapat mengurangi lalu lintas jaringan.
+   - Subscriber dapat meminta pembaruan sesuai dengan kecepatan mereka sendiri, mencegah kelebihan beban selama periode aktivitas tinggi.
+   - Pengikatan antara penerbit dan subscriber lebih rendah, karena penerbit tidak perlu tahu data apa yang dibutuhkan setiap subscriber.
+   - Toleransi kesalahan yang lebih baik, karena ketidaktersediaan sementara subscriber tidak akan mengakibatkan notifikasi yang terlewat.
+    
+    Kerugian model Pull:
+
+   - Latensi yang lebih tinggi dalam pengiriman notifikasi, karena subscriber mungkin melakukan polling pada interval tertentu daripada menerima pembaruan secara langsung.
+   - Beban sistem keseluruhan lebih tinggi akibat polling yang sering dari banyak subscriber.
+   - Implementasi yang lebih kompleks yang mengharuskan subscriber untuk mempertahankan status guna mendeteksi perubahan.
+   - Potensi inkonsistensi data jika subscriber melakukan polling pada waktu yang berbeda.
+   - Penggunaan sumber daya yang tidak efisien ketika tidak ada pembaruan yang perlu diambil.
+
+3. Jika kita memutuskan untuk tidak menggunakan multi-threading dalam proses notifikasi:
+   - Performance bottleneck: Aplikasi akan memproses notifikasi secara berurutan, memblokir thread utama sambil menunggu setiap permintaan HTTP selesai.
+   - Request timeout: Subscriber yang lambat atau tidak responsif akan memblokir seluruh proses notifikasi.
+   - Skalabilitas yang buruk: Seiring dengan meningkatnya jumlah subscriber, waktu notifikasi akan meningkat secara linier.
+   - Responsivitas yang menurun: Aplikasi akan tampak beku selama siaran notifikasi.
+   - Potensi deadlock: Jika seorang subscriber mencoba berinteraksi dengan penerbit saat menunggu proses notifikasi selesai.
+   - Dampak kegagalan yang lebih tinggi: Notifikasi yang gagal dapat menunda atau mencegah notifikasi kepada subscriber lain.

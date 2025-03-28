@@ -63,7 +63,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement subscribe function in Notification controller.`
     -   [x] Commit: `Implement unsubscribe function in Notification service.`
     -   [x] Commit: `Implement unsubscribe function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
     -   [x] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
     -   [x] Commit: `Implement notify function in Notification service to notify each Subscriber.`
@@ -98,5 +98,25 @@ This is the place for you to write reflections:
    - Rust mendorong penggunaan sistem tipe dan model kepemilikannya daripada pola OOP tradisional jika memungkinkan
 
 #### Reflection Publisher-2
+1. Kita perlu memisahkan "Service" dan "Repository" dari Model untuk beberapa prinsip desain penting:
+   - Single Responsibility Principle: Dengan memisahkan repository (akses data) dari service (logika bisnis), setiap komponen memiliki tanggung jawab yang jelas. Repository menangani operasi persistensi data, sementara service menangani aturan dan operasi bisnis.
+   - Separation of Concerns: Pemisahan ini menciptakan batas yang lebih jelas antara penyimpanan data, logika bisnis, dan presentasi, menjadikan sistem lebih modular dan lebih mudah dipahami.
+   - Testability: Dengan lapisan yang terpisah, kita dapat lebih mudah membuat unit test dengan mock untuk setiap komponen, daripada perlu menguji semuanya bersama-sama.
+   - Maintainability: Perubahan pada implementasi database tidak akan mempengaruhi logika bisnis, dan sebaliknya, memungkinkan tim bekerja secara paralel dan mengurangi dampak dari perubahan.
+   - Scalability: Lapisan-lapisan ini dapat diskalakan secara independen berdasarkan kebutuhan spesifik mereka (misalnya, koneksi database vs pemrosesan bisnis).
+
+2. Jika kita hanya menggunakan Model untuk menangani semuanya (penyimpanan data, logika bisnis, dll.):
+   - Coupling: Model Program, Subscriber, dan Notification akan menjadi sangat terikat, dengan masing-masing perlu mengetahui terlalu banyak tentang implementasi lainnya.
+   - Code Complexity: Setiap model akan tumbuh menjadi sangat besar, menangani persistensi, aturan bisnis, notifikasi, dan lainnya.
+   - Decreased Cohesion: Model-model akan kehilangan tujuan terfokus mereka, menjadi entitas yang menangani terlalu banyak fungsi yang berbeda.
+   - Difficult Testing: Pengujian akan membutuhkan pengaturan seluruh ekosistem daripada mengisolasi komponen-komponen.
+
+3. Mengeksplorasi Postman telah sangat berharga untuk menguji sistem ini:
+   - Request Collections: Mengorganisir panggilan API yang terkait bersama-sama membantu menjaga struktur saat menguji berbagai komponen (subscriber, produk, notifikasi). 
+   - Environment Variables: Menyiapkan berbagai lingkungan (pengembangan, pengujian) memudahkan untuk beralih antara lingkungan tersebut tanpa mengubah URL permintaan.
+   - Automated Testing: Kemampuan untuk menulis skrip pengujian untuk respons memastikan bahwa endpoint berperilaku sesuai harapan secara konsisten.
+   - Request Chaining: Menggunakan data dari respons sebelumnya dalam permintaan selanjutnya memungkinkan saya untuk menguji alur kerja, seperti berlangganan dan kemudian menguji pengiriman notifikasi.
+   - Mock Servers: Untuk proyek-proyek mendatang, kemampuan server palsu Postman dapat membantu pengembangan front-end berjalan secara independen dari penyelesaian backend.
+   - Team Collaboration: Membagikan koleksi memudahkan kolaborasi dengan anggota tim yang perlu memahami dan menguji API.
 
 #### Reflection Publisher-3

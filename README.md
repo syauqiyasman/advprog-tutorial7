@@ -48,27 +48,27 @@ You can install Postman via this website: https://www.postman.com/downloads/
     (You might want to use `cargo check` if you only need to verify your work without running the app.)
 
 ## Mandatory Checklists (Publisher)
--   [ ] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
+-   [x] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Subscriber model struct.`
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Subscriber repository.`
-    -   [ ] Commit: `Implement list_all function in Subscriber repository.`
-    -   [ ] Commit: `Implement delete function in Subscriber repository.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
+    -   [x] Commit: `Create Subscriber model struct.`
+    -   [x] Commit: `Create Notification model struct.`
+    -   [x] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
+    -   [x] Commit: `Implement add function in Subscriber repository.`
+    -   [x] Commit: `Implement list_all function in Subscriber repository.`
+    -   [x] Commit: `Implement delete function in Subscriber repository.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
-    -   [ ] Commit: `Create Notification service struct skeleton.`
-    -   [ ] Commit: `Implement subscribe function in Notification service.`
-    -   [ ] Commit: `Implement subscribe function in Notification controller.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification service.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification controller.`
+    -   [x] Commit: `Create Notification service struct skeleton.`
+    -   [x] Commit: `Implement subscribe function in Notification service.`
+    -   [x] Commit: `Implement subscribe function in Notification controller.`
+    -   [x] Commit: `Implement unsubscribe function in Notification service.`
+    -   [x] Commit: `Implement unsubscribe function in Notification controller.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
-    -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
-    -   [ ] Commit: `Implement notify function in Notification service to notify each Subscriber.`
-    -   [ ] Commit: `Implement publish function in Program service and Program controller.`
-    -   [ ] Commit: `Edit Product service methods to call notify after create/delete.`
+    -   [x] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
+    -   [x] Commit: `Implement notify function in Notification service to notify each Subscriber.`
+    -   [x] Commit: `Implement publish function in Program service and Program controller.`
+    -   [x] Commit: `Edit Product service methods to call notify after create/delete.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
 
 ## Your Reflections
@@ -77,6 +77,25 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+1. Dalam pola Observer, secara tradisional Subscriber didefinisikan sebagai sebuah interface. Dalam kasus BambangShop, kita bisa menggunakan sebuah trait untuk mendefinisikan perilaku dari Subscriber, namun sebuah struct Model sudah cukup karena:
+   - Kita memiliki implementasi Subscriber yang konsisten dan tunggal
+   - Semua subscriber berinteraksi dengan sistem dengan cara yang sama (menerima notifikasi HTTP)
+   - Perilakunya cukup sederhana sehingga kita tidak memerlukan beberapa implementasi dari konsep Subscriber
+   - Menggunakan struct secara langsung menyederhanakan kode dan sejalan dengan preferensi Rust untuk tipe konkret ketika abstraksi tidak dibutuhkan
+
+2. Menggunakan DashMap (map/dictionary) alih-alih Vec (list) diperlukan dalam kasus ini karena:
+   - Kita perlu memastikan keunikan ID dan URL dengan efisien
+   - Mencari subscriber berdasarkan ID adalah operasi umum yang harus cepat
+   - DashMap menyediakan waktu pencarian O(1) dibandingkan dengan O(n) pada Vec ketika mencari item
+   - Kita perlu melakukan penambahan dan penghapusan yang sering, yang lebih efisien dengan DashMap
+   - DashMap memberikan jaminan thread-safety yang penting dalam konteks server web
+
+3. DashMap lebih disukai dibandingkan dengan menerapkan pola Singleton karena:
+   - Sistem kepemilikan Rust membuat implementasi Singleton tradisional menjadi kompleks
+   - DashMap sudah menyediakan jaminan thread-safety yang perlu kita implementasikan secara manual
+   - DashMap menangani akses bersamaan dengan efisien, yang krusial untuk aplikasi web
+   - Menggunakan pustaka yang sudah teruji mengurangi kemungkinan bug konkuren yang halus
+   - Rust mendorong penggunaan sistem tipe dan model kepemilikannya daripada pola OOP tradisional jika memungkinkan
 
 #### Reflection Publisher-2
 
